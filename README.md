@@ -1,6 +1,3 @@
-# Thesis_Chapter-3_SMC_Video_RecSys
- 
-
 # # YouTube Video Recommender Code for Chapter 3
 </div>
 
