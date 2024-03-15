@@ -1,0 +1,9 @@
+<input type="hidden" name="poi" value="{{ place }}">
+<ul name="video-list" id="yt-list">
+{% for video in videos %}
+    <li class="yt-checkbox btn">
+        <input type="checkbox" id="{{ forloop.counter0 }}" name="videos" value="{{ video }}" checked class="form-check">
+        <iframe width="253" height="150" src="https://www.youtube.com/embed/{{ video }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </li>
+{% endfor %}
+</ul>

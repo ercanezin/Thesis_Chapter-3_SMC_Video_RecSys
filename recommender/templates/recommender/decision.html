@@ -1,0 +1,79 @@
+{% extends 'recommender/base.html' %}
+{% block title %}Watch Destination Videos{% endblock %}
+{% load staticfiles %}
+{% load embed_video_tags %}
+{% block body %}
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            // Add minus icon for collapse element which is open by default
+            $(".collapse.in").each(function () {
+                $(this).siblings(".panel-heading").find(".glyphicon").addClass("glyphicon-minus").removeClass("glyphicon-plus");
+            });
+
+            // Toggle plus minus icon on show hide of collapse element
+            $(".collapse").on('show.bs.collapse', function () {
+                $(this).parent().find(".glyphicon").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+            }).on('hide.bs.collapse', function () {
+                $(this).parent().find(".glyphicon").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+            });
+        });
+
+    </script>
+    <div class="container-fluid songs-container">
+
+        <div class="row">
+
+            <section class="text-center">
+                <div class="inner">
+                    <header>
+                        <h1>~ Itenarary for <strong>{{ bundle.name }}</strong> ~</h1>
+                    </header>
+                </div>
+            </section>
+            <section data-model-name="subsciption-list">
+                <div class="container">
+                    <div class="row">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading"><h4>A decision has been made on your itinerary...</h4></div>
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <!-- Accordion Starts-->
+                                    <div class="panel-group" id="accordion">
+
+                                        {% for poi in pois %}
+
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                        <a data-toggle="collapse" data-parent="#accordion"
+                                                           href="#collapse"><span
+                                                                class="glyphicon glyphicon-plus"></span> {{ poi.location_name }}
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div><!-- Accordion Ends-->
+                                    <div class="text-center">
+                                        <a href="{% url 'recommender:home' %}" class="btn btn-primary"><span
+                                                class="glyphicon glyphicon-home"></span> Back to Home</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   <!-- Panel ends-->
+                    </div><!-- Row ends-->
+                </div> <!-- Container ends-->
+
+
+            </section>
+        </div>
+
+    </div>
+
+    <script>
+
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'recommender/base.html' %}
+{% block title %}Profile{% endblock %}
+{% load mathfilters %}
+{% load staticfiles %}
+{% block body %}
+    <div class="container-fluid songs-container">
+
+        <div class="row">
+            {% if updated %}
+                <div class="alert alert-success" role="alert">
+                    <p>Your preferences successfully updated!</p></div>
+            {% endif %}
+            <div class="col-lg-4 col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+
+                        <div class="alert alert-info" role="alert"><p>Hi,
+                            <strong>{{ user.get_username }} </strong>.
+                            Here you can update your preferences that you selected when you signed up.</p></div>
+
+                        <form method="post" action="{% url 'recommender:profile' %}">
+                            {% csrf_token %}
+                            {% for lb in labels %}
+
+                                <input type="checkbox"
+                                        {% for ui in userinterests %}
+
+                                            {% if ui.label.label_name == lb.label_name %}checked{% endif %}
+
+                                        {% endfor %}
+                                       name="{{ lb.id }}" value="1"> {{ lb.label_name }} : {% for ui in userinterests %} {% if ui.label.label_name == lb.label_name %}<span class="badge">{{ ui.weight }}</span>{% endif %} {% endfor %}<br>
+                            {% endfor %}
+                            <input type="hidden" value="1" name="isupdate">
+                            <br><br>
+                            <button class="btn btn-success pull-right" type="submit">Update</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}
