@@ -17,14 +17,14 @@ This chapter expands on Recommendation Systems (RS) and introduces a novel Group
 ATTENTION: The code has not been tested with the new version of Django. If you intend to completely re-implement the project using a newer version, we strongly advise you to undergo Django training beforehand. We also recommend creating a YouTube developer account and obtaining a secret key to access videos hosted on YouTube. Additionally, MySQL needs to be installed separately to allow the application to interact with a database. However, once the necessary modifications are made to the system, you can choose any database you prefer.
   
  
-  Django==2.1.7
-  django-embed-video==1.2.0
-  django-mathfilters==0.4.0
-  mysqlclient==1.3.13
-  pafy==0.5.4
-  youtube-dl==2019.4.1
-  google-api-python-client
-  numpy
+	  Django==2.1.7
+	  django-embed-video==1.2.0
+	  django-mathfilters==0.4.0
+	  mysqlclient==1.3.13
+	  pafy==0.5.4
+	  youtube-dl==2019.4.1
+	  google-api-python-client
+	  numpy
  
 
 	Files and their usage
