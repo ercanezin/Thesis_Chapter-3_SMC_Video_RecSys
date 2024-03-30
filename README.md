@@ -21,7 +21,9 @@ ATTENTION: If you intend to implement the project, we strongly advise you to und
 	File name: settings.py, Change line 82. Update the MySQL connection settings to your desired connection settings.
 	File names: add_pois.html and edit_pois.html. Update with your key: <script src="https://maps.googleapis.com/maps/api/js?key=###your_maps_key###&v=3.exp&libraries=places"></script> 
 	We have also included Jupyter notebooks for the analysis in the notebook folder. Therefore the requirements includes libraries for them. Deduct them if needed.
- 
+
+# List of Libraries in the requirement file
+  
     Django
     django-embed-video
     django-mathfilters
@@ -36,18 +38,18 @@ ATTENTION: If you intend to implement the project, we strongly advise you to und
 
  
 
-	Files and their usage
-
+# Files and their usage
+	
 	TravelMadeEasy -- Contains Django Related Module files
 	css -- Contains css static code for front-end of the application
 	fonts -- Contains fonts used by Django for front-end of the application
 	recommender -- Contains code that works in the back-end of the application and also handles requests.
- 	manage.py -- Main Django management file to control Django operations.
-	  requirements.txt -- The file to install required libraries easily. 
-	  notebooks  -- This directory contains analysis files along with data collected from experiments. 
+	manage.py -- Main Django management file to control Django operations.
+	requirements.txt -- The file to install required libraries easily. 
+	notebooks  -- This directory contains analysis files along with data collected from experiments. 
 
 
-	If you have any questions, please get in touch with ezinercan@gmail.com
+If you have any questions, please get in touch with ezinercan@gmail.com
 
 # Bibtex
 If this work is helpful for your research, please consider citing  
