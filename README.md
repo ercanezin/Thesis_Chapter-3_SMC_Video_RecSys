@@ -16,11 +16,11 @@ This chapter expands on Recommendation Systems (RS) and introduces a novel Group
 
 ATTENTION: If you intend to implement the project, we strongly advise you to undergo Django training beforehand. We also recommend creating a Google Developer Account and obtaining a secret key to access videos and map data hosted on Google servers. Additionally, MySQL needs to be installed separately to allow the application to interact with a database. However, once the necessary modifications are made to the system, you can choose any database you prefer.
 
-Here are few files that you need to update once you gain Google APIs secret key. 
-File name: settings.py, Change this line: YOUTUBE_DEVELOPER_KEY = '' # Please add your unique Youtube developer Key here.
-File name: settings.py, Change line 82. Update the MySQL connection settings to your desired connection settings.
-File names: add_pois.html and edit_pois.html. Update with your key: <script src="https://maps.googleapis.com/maps/api/js?key=###your_maps_key###&v=3.exp&libraries=places"></script> 
-We have also included Jupyter notebooks for the analysis in the notebook folder. Therefore the requirements includes libraries for them. Deduct them if needed.
+	Here are few files that you need to update once you gain Google APIs secret key. 
+	File name: settings.py, Change this line: YOUTUBE_DEVELOPER_KEY = '' # Please add your unique Youtube developer Key here.
+	File name: settings.py, Change line 82. Update the MySQL connection settings to your desired connection settings.
+	File names: add_pois.html and edit_pois.html. Update with your key: <script src="https://maps.googleapis.com/maps/api/js?key=###your_maps_key###&v=3.exp&libraries=places"></script> 
+	We have also included Jupyter notebooks for the analysis in the notebook folder. Therefore the requirements includes libraries for them. Deduct them if needed.
  
     Django
     django-embed-video
@@ -43,8 +43,8 @@ We have also included Jupyter notebooks for the analysis in the notebook folder.
 	fonts -- Contains fonts used by Django for front-end of the application
 	recommender -- Contains code that works in the back-end of the application and also handles requests.
  	manage.py -- Main Django management file to control Django operations.
-  requirements.txt -- The file to install required libraries easily. 
-  notebooks  -- This directory contains analysis files along with data collected from experiments. 
+	  requirements.txt -- The file to install required libraries easily. 
+	  notebooks  -- This directory contains analysis files along with data collected from experiments. 
 
 
 	If you have any questions, please get in touch with ezinercan@gmail.com
