@@ -1,0 +1,103 @@
+{% extends 'recommender/base.html' %}
+{% block title %}Itinerary Decision{% endblock %}
+{% load static %}
+{% load embed_video_tags %}
+{% block body %}
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            // Add minus icon for collapse element which is open by default
+            $(".collapse.in").each(function () {
+                $(this).siblings(".panel-heading").find(".glyphicon").addClass("glyphicon-minus").removeClass("glyphicon-plus");
+            });
+
+            // Toggle plus minus icon on show hide of collapse element
+            $(".collapse").on('show.bs.collapse', function () {
+                $(this).parent().find(".glyphicon").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+            }).on('hide.bs.collapse', function () {
+                $(this).parent().find(".glyphicon").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+            });
+        });
+
+    </script>
+    <div class="container-fluid songs-container">
+
+        <div class="row">
+
+            <section class="text-center">
+                <div class="inner">
+                    <header>
+                        <h1>~ Itenarary for <strong>{{ result_dict.bundle.name }}</strong> ~</h1>
+                    </header>
+                </div>
+            </section>
+            <section data-model-name="subsciption-list">
+                <div class="container">
+                    <div class="row">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading"><h4>A decision has been made on your itinerary...</h4></div>
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <br><br>
+                                    <table>
+                                        <thead style="border-bottom: 1px solid #ccc;">
+                                        <td><b>List of Places: </b></td>
+                                        <td>{{ result_dict.pois }} </td>
+                                        </thead>
+                                        <!--
+                                        <tr>
+                                            <td>num_of_final_destination </td>
+                                            <td>{{ result_dict.num_of_final_destionation }}</td>
+                                        </tr>
+                                        -->
+                                        <tr>
+                                            <td><b>Final POI list: </b></td>
+                                            <td> {{ result_dict.ordered_pois_list }} </td>
+                                            <td>&nbsp;&nbsp;<b>POI Decision:&nbsp;&nbsp; </b></td>
+                                            <td> {{ result_dict.ordered_pois_decision }} </td>
+                                        </tr>
+                                        <!--
+                                        <tr>
+                                            <td>ordered_pois_list_values</td>
+                                            <td>{{ result_dict.ordered_pois_list_values }}</td>
+                                        </tr>
+                                        -->
+                                        <tr>
+                                            <td><b>Final POI list with Trust Network:&nbsp;&nbsp; </b></td>
+                                            <td>{{ result_dict.trust_ordered_pois_list }}</td>
+                                            <td>&nbsp;&nbsp;<b>POI Decision: </b>&nbsp;&nbsp;</td>
+                                            <td> {{ result_dict.trust_ordered_pois_decision }} </td>
+                                        </tr>
+                                        <!--
+                                        <tr>
+                                            <td>trust_ordered_pois_list_values</td>
+                                            <td>{{ result_dict.trust_ordered_pois_list_values }}</td>
+                                        </tr>
+                                        -->
+
+
+                                    </table>
+                                    <br>
+                                    <br>
+                                    <div class="text-center">
+                                        <a href="{% url 'recommender:home' %}" class="btn btn-primary"><span
+                                                class="glyphicon glyphicon-home"></span> Back to Home</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   <!-- Panel ends-->
+                    </div><!-- Row ends-->
+                </div> <!-- Container ends-->
+
+
+            </section>
+        </div>
+
+    </div>
+
+    <script>
+
+
+    </script>
+
+{% endblock %}

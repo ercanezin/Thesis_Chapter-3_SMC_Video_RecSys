@@ -1,0 +1,39 @@
+{% extends 'recommender/base.html' %}
+{% block title %}Profile{% endblock %}
+{% load mathfilters %}
+{% load static %}
+{% block body %}
+    <div class="container-fluid songs-container">
+
+        <div class="row">
+            {% if updated %}
+                <div class="alert alert-success" role="alert">
+                    <p>Your preferences successfully updated!</p></div>
+            {% endif %}
+            <div class="col-lg-4 col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+
+                        <div class="alert alert-info" role="alert"><p>Hi,
+                            <strong>{{ user.get_username | title }} </strong>.
+                            Here you can  see your details:</p>
+                            Username: {{ user.get_username }}<br>
+                            Email: {{ user.email }}<br>
+                            Created On: {{ user.date_joined }}<br>
+                            Last Login: {{ user.last_login }} <br>
+
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}

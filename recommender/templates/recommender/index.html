@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-GB" xml:lang="en-GB">
+{% load static %}
+<head>
+    <link rel="stylesheet" href="{% static 'recommender/picker_style.css' %}"/>
+    <title>{% block title %}POI Video Recommender{% endblock %}</title>
+</head>
+
+<body>
+<form method="POST" action="{% url 'recommender:index' %}">
+    {% csrf_token %}
+    <div class="button">
+        <div id="heading"><h2>TRAVEL MADE EASY</h2></div>
+        <canvas id='canvas'
+                style="background: url({% static 'recommender/images/listbackground.png' %}) no-repeat center;"></canvas>
+
+
+        <button id="createAccount" class="submitbutton" name="createAccount" type="submit">Create an Account</button>
+        <button id="login" class="submitbutton" name="login" type="submit">Login</button>
+
+    </div>
+</form>
+
+<script type="application/javascript">
+
+    var classname = document.getElementsByClassName("indexbutton");
+
+    for (var i = 0; i < classname.length; i++) {
+        classname[i].addEventListener('click', changeinput, this);
+    }
+</script>
+
+</body>
+</html>

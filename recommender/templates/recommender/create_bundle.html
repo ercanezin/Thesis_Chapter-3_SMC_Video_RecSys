@@ -1,0 +1,68 @@
+{% extends 'recommender/base.html' %}
+{% block title %}Create Itinerary{% endblock %}
+{% load static %}
+{% load embed_video_tags %}
+{% block body %}
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h3>Create Itinerary</h3>
+                        {% if error_message %}
+                            <p><strong>{{ error_message }}</strong></p>
+                        {% endif %}
+                        <form class="form-horizontal" role="form" action="{% url 'recommender:add_pois' %}"
+                              method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="control-label col-sm-2" for="id_username">
+                                        Itinerary Name:
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input id="id_username" maxlength="30" name="name" type="text" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="control-label col-sm-2" for="end_date">
+                                        Itinerary End Date:
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <input id="end_date" name="end_date" type="date">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button id="submit_btn" type="submit" class="btn btn-success">Add Videos</button>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <a href="{% url 'recommender:home' %}" class="btn btn-primary"><span
+                                        class="glyphicon glyphicon-home"></span> Back to Home</a>
+                            </div>
+
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        $("#submit_btn").prop('disabled', true);
+
+        $("#end_date").change(function () {
+            if (Date.parse($('#end_date').val()) - Date.parse(new Date()) < 1) {
+                alert("You should allow at least 1 day for watching videos ");
+                $("#submit_btn").prop('disabled', true);
+            }
+            else if (Date.parse($('#end_date').val()) - Date.parse(new Date()) >= 1) {
+                $("#submit_btn").prop('disabled', false);
+            }
+        });
+    </script>
+{% endblock %}

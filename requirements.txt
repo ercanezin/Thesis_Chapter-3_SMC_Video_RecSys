@@ -1,0 +1,11 @@
+Django
+django-embed-video
+django-mathfilters
+mysqlclient
+google-api-python-client
+numpy
+youtube-dl
+pandas
+jupyter
+seaborn
+scikit-learn

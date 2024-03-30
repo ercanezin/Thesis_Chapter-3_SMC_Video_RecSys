@@ -1,0 +1,99 @@
+{% extends 'recommender/base.html' %}
+{% block title %}Home{% endblock %}
+{% load static %}
+{% load embed_video_tags %}
+{% block body %}
+
+    <div class="container-fluid songs-container">
+
+        <div class="row">
+
+            <section class="container">
+                <div class="inner text-center">
+                    <header class="text-center"
+                            style="border: 1px solid darkgrey; border-radius: 10px; margin-bottom: 20px">
+                        <h1>~Travel Made Easy~</h1>
+                        <p>Decide Travel in a Group!</p>
+                    </header>
+
+                </div>
+            </section>
+            <section data-model-name="subsciption-list">
+                <div class="container">
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>Watch Your Subscriptions Here!
+                                    <a href="{% url 'recommender:create_bundle' %}" class="btn btn-success pull-right">Create
+                                        an itinerary</a></h4>
+                            </div>
+                            <div class="panel-body">
+
+
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table id="mytable" class="table table-bordred table-striped">
+
+                                            <thead>
+
+                                            <th>Itinerary</th>
+                                            <th>Creator</th>
+                                            <th>Created On</th>
+                                            <th>Ends On</th>
+                                            <th># of Destinations</th>
+                                            <th># of Subscribers</th>
+                                            <th>Watch</th>
+                                            </thead>
+                                            <tbody>
+
+                                            {% for subscription in subscriptions %}
+                                                {% with subscription.bundle as bundle %}
+                                                    <tr id="bundle-{{ bundle.id }}">
+                                                        <td>{{ bundle.name }}</td>
+                                                        <td>{{ bundle.user.username }}</td>
+                                                        <td>{{ bundle.created_on }}</td>
+                                                        <td>{{ bundle.end_date }}</td>
+                                                        <td>{{ bundle.poi_set.count }} (fd:{{ bundle.number_of_final_dest }})</td>
+                                                        <td>{{ bundle.subscription_set.count }}</td>
+                                                        <td>
+                                                            <p>
+                                                                <a href="{% url 'recommender:watch_videos' %}?bundleId={{ bundle.id }}"
+                                                                   class="btn btn-danger btn-xs" data-toggle='tooltip'
+                                                                        {% if bundle.poi_set.count < 3 %}
+                                                                   disabled="disabled"  onclick="return false;"
+                                                                   title='There is no enough destinations.At least 3 destinations required.'
+                                                                        {% else %}
+                                                                   title='Click to watch videos.'{% endif %}>
+                                                                    <span class="glyphicon glyphicon-play"></span>
+                                                                </a>
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                {% endwith %}
+                                            {% endfor %}
+
+                                            </tbody>
+                                        </table>
+                                        <div class="text-center">
+                                            <a href="{% url 'recommender:bundles' %}" class="btn btn-primary"><span
+                                                    class="glyphicon glyphicon-cog"></span> Manage
+                                                subscriptions</a>
+
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   <!-- Panel ends-->
+                    </div><!-- Row ends-->
+                </div> <!-- Container ends-->
+
+            </section>
+        </div>
+
+    </div>
+
+{% endblock %}
+</body>
+</html>

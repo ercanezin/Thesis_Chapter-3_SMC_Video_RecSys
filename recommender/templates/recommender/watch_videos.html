@@ -1,0 +1,301 @@
+{% extends 'recommender/base.html' %}
+{% block title %}Watch Destination Videos{% endblock %}
+{% load static %}
+{% load embed_video_tags %}
+{% block body %}
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            // Add minus icon for collapse element which is open by default
+            $(".collapse.in").each(function () {
+                $(this).siblings(".panel-heading").find(".glyphicon").addClass("glyphicon-minus").removeClass("glyphicon-plus");
+            });
+
+            // Toggle plus minus icon on show hide of collapse element
+            $(".collapse").on('show.bs.collapse', function () {
+                $(this).parent().find(".glyphicon").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+            }).on('hide.bs.collapse', function () {
+                $(this).parent().find(".glyphicon").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+            });
+
+            $("iframe").each(function () {
+                let src = $(this).prop("src");
+                $(this).prop("src", src + (src.indexOf('?') < 0 ? '?' : '&') + 'autoplay=0&showinfo=1&autohide=1&controls=0');
+
+                src = src.substring(src.lastIndexOf("/") + 1, src.lastIndexOf("?"));
+                $(this).prop("id", "ytframe-" + src);
+                $(this).next().data("youtube-id", src);
+
+            });
+
+            $.post("{% url 'recommender:get_video_history' %}", {bundle_id: {{bundle.id}}},
+                function (success_data) {
+                    let watch_hist_set = jQuery.parseJSON(success_data);
+
+                    if (watch_hist_set.length > 0) {
+
+                        for (i in watch_hist_set) {
+                            let whist = "#wh-" + watch_hist_set[i].video;
+                            $(whist).append('<span class="label label-primary mylbl" title="Watched" data-placement="top" data-toggle="tooltip"><span class="glyphicon glyphicon-eye-open"></span></span>&nbsp;')
+
+                            if (watch_hist_set[i].is_liked == "1") {
+                                $(whist).append('<span class="label label-success mylbl" title="Liked" data-placement="top" data-toggle="tooltip"><span class="glyphicon glyphicon-thumbs-up"></span></span>&nbsp;')
+                            } else if (watch_hist_set[i].is_liked == "-1") {
+                                $(whist).append('<span class="label label-danger mylbl" title="Disliked" data-placement="top" data-toggle="tooltip"><span class="glyphicon glyphicon-thumbs-down"></span></span>&nbsp;')
+                            }
+                        }
+
+
+                    } else
+                        console.log("No watch history exists!")
+                }
+            );
+
+
+            /*
+
+            <span class="label label-primary" data-title="Watched" data-placement='top' data-toggle='tooltip'><span class="glyphicon glyphicon-eye-open"></span></span>
+            <span class="label label-success" data-title="Watched" data-placement='top' data-toggle='tooltip'><span class="glyphicon glyphicon-thumbs-up"></span></span>
+            <span class="label label-danger" data-title="Watched" data-placement='top' data-toggle='tooltip'><span class="glyphicon glyphicon-thumbs-down"></span></span>
+
+
+            */
+        });
+
+    </script>
+    <div class="container-fluid songs-container">
+
+        <div class="row">
+
+            <section class="text-center">
+                <div class="inner">
+                    <header>
+                        <h1>~ Itinerary for <strong>{{ bundle.name }}</strong> ~</h1>
+                    </header>
+                </div>
+            </section>
+            <section data-model-name="subsciption-list">
+                <div class="container">
+                    <div class="row">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading"><h4>Watch Destination Videos here...</h4></div>
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <!-- Accordion Starts-->
+                                    <div class="panel-group" id="accordion">
+
+
+                                        {% if recommended_videos %}
+
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading"
+                                                     style="background-color: #4cae4c; color:#FFFFFF">
+                                                    <h4 class="panel-title">
+                                                        <a data-toggle="collapse" data-parent="#accordion"
+                                                           href="#collapse-{{ forloop.counter }}"><span
+                                                                class="glyphicon glyphicon-plus"></span> Recommended
+                                                            videos for you..
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapse-{{ forloop.counter }}"
+                                                     class="panel-collapse collapse">
+                                                    <div class="panel-body">
+                                                        <p>
+                                                            {% for vid in recommended_videos %}
+                                                                <div class="col-lg-4">
+                                                                    <div class="thumbnail"
+                                                                         style="min-height: 340px;position:relative;">
+                                                                        {% video vid.video_url '318x180' is_secure=True %}
+                                                                        <div class="ytVideoOverlay"
+                                                                             style="position:absolute;top:0;left:0;width:100%;height:100%;">
+                                                                        </div>
+                                                                        <div class="caption"
+                                                                             data-video-id="{{ vid.id }}">
+                                                                            <h4 class="vidowner">{{ vid.video_owner }}</h4>
+                                                                            <h5 class="vidtitle">{{ vid.video_title }}</h5>
+                                                                            <div class="caption-footer col-sm-11"
+                                                                                 id="wh-{{ vid.id }}"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            {% endfor %}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        {% endif %}
+
+
+
+                                        {% for poi_location,videos in pois_dict.items %}
+
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                        <a data-toggle="collapse" data-parent="#accordion"
+                                                           href="#collapse-{{ forloop.counter }}"><span
+                                                                class="glyphicon glyphicon-plus"></span> {{ poi_location }}
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapse-{{ forloop.counter }}"
+                                                     class="panel-collapse collapse">
+                                                    <div class="panel-body">
+                                                        <p>
+                                                            {% for vid in videos %}
+                                                                <div class="col-lg-4">
+                                                                    <div class="thumbnail"
+                                                                         style="min-height: 340px;position:relative;">
+                                                                        {% video vid.video_url '318x180' is_secure=True %}
+                                                                        <div class="ytVideoOverlay"
+                                                                             style="position:absolute;top:0;left:0;width:100%;height:100%;">
+                                                                        </div>
+                                                                        <div class="caption"
+                                                                             data-video-id="{{ vid.id }}">
+                                                                            <h4 class="vidowner">{{ vid.video_owner }}</h4>
+                                                                            <h5 class="vidtitle">{{ vid.video_title }}</h5>
+                                                                            <div class="caption-footer col-sm-11"
+                                                                                 id="wh-{{ vid.id }}"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            {% endfor %}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        {% endfor %}
+                                    </div><!-- Accordion Ends-->
+
+
+                                    <div class="text-center">
+                                        <a href="{% url 'recommender:home' %}" class="btn btn-primary"><span
+                                                class="glyphicon glyphicon-home"></span> Back to Home</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   <!-- Panel ends-->
+                    </div><!-- Row ends-->
+                </div> <!-- Container ends-->
+
+
+                <!-- WatchVideo MODAL-->
+                <div class="modal fade" id="watchVideo" tabindex="-1" role="dialog" aria-labelledby="watchVideo"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span
+                                        class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                                <div class="modal-title custom_align" id="watchVideoHeading">
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <div class="modal-body" id="watchVideoModalBody">
+
+
+                                </div>
+                                <div class="modal-footer"></div>
+                                <div id="watchVideolikert">
+                                    <div class="text-center">
+                                        <button type="button" class="btn-lg btn-success"
+                                                id="likebtn"><span
+                                                class="glyphicon glyphicon-thumbs-up"></span> Like
+                                        </button>
+                                        &nbsp;
+                                        <button type="button" class="btn-lg btn-danger" id="dislikebtn"><span
+                                                class="glyphicon glyphicon-thumbs-down"></span> Dislike
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+
+
+            </section>
+        </div>
+
+    </div>
+
+    <script>
+
+        $('.ytVideoOverlay').click(function () {
+            let video_id = $(this).next().data("video-id");
+            $('#watchVideo').modal('show');
+            $("#watchVideoHeading").html("<h4>" + $(this).next().find("h4").html() + "</h4><h5>" + $(this).next().find("h5").html() + "</h5>");
+            $('#dislikebtn').data("video-id", video_id);
+            $('#likebtn').data("video-id", video_id);
+            $("#watchVideoModalBody").html('<iframe style="position: absolute;top: 0;left: 0;width: 868px;height: 100%;" src="https://www.youtube.com/embed/' + $(this).data("youtube-id") + '?autoplay=1&loop=0&rel=0&showinfo=0&wmode=transparent" frameborder="0" allowfullscreen wmode="Opaque"></iframe>');
+
+            $('#dislikebtn').prop('disabled', true);
+            $('#likebtn').prop('disabled', true);
+
+            setTimeout(function () {
+                logInteraction(video_id, 1);
+                if ($("#wh-" + video_id).html() == "") {
+                    $("#wh-" + video_id).append('<span class="label label-primary mylbl" title="Watched" data-placement="top" data-toggle="tooltip"><span class="glyphicon glyphicon-eye-open"></span></span>&nbsp;')
+                }
+
+                $('#dislikebtn').prop('disabled', false);
+                $('#likebtn').prop('disabled', false);
+
+            }, 5000);
+
+
+        });
+
+        $('#watchVideo').on('hidden.bs.modal', function () {
+            $("#watchVideoModalBody").html("");
+            $("#watchVideoHeading").html();
+            $('#dislikebtn').removeData();
+            $('#likebtn').removeData();
+            $('#watchVideo').modal('hide');
+        });
+
+
+        $('#dislikebtn').click(function () {
+            let video_id = $(this).data("video-id");
+            logInteraction(video_id, 3);
+            $("#wh-" + video_id).html("");
+            $("#wh-" + video_id).append('<span class="label label-primary mylbl" title="Watched" data-placement="top" data-toggle="tooltip"><span class="glyphicon glyphicon-eye-open"></span></span>&nbsp;')
+            $("#wh-" + video_id).append('<span class="label label-danger mylbl" title="Disliked" data-placement="top" data-toggle="tooltip"><span class="glyphicon glyphicon-thumbs-down"></span></span>&nbsp;')
+
+            $('#dislikebtn').prop('disabled', true);
+            $('#likebtn').prop('disabled', false);
+
+        });
+
+        $('#likebtn').click(function () {
+            let video_id = $(this).data("video-id");
+            logInteraction($(this).data("video-id"), 2);
+            $("#wh-" + video_id).html("");
+            $("#wh-" + video_id).append('<div class="label label-primary mylbl" title="Watched" data-placement="top" data-toggle="tooltip" ><span class="glyphicon glyphicon-eye-open"></span></div>&nbsp;')
+            $("#wh-" + video_id).append('<div class="label label-success mylbl" title="Liked" data-placement="top" data-toggle="tooltip" ><span class="glyphicon glyphicon-thumbs-up"></span></div>&nbsp;')
+            $('#dislikebtn').prop('disabled', false);
+            $('#likebtn').prop('disabled', true);
+
+        });
+
+ 
+        function logInteraction(videoId, interactionId) {
+            $.post("{% url 'recommender:log_interaction' %}", {
+                video_id: videoId,
+                interaction: interactionId,
+                bundle_id:{{ bundle.id }}
+            });
+        }
+
+
+    </script>
+
+{% endblock %}

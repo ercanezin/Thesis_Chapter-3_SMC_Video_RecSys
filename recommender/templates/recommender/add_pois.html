@@ -1,0 +1,260 @@
+{% extends 'recommender/base.html' %}
+{% block title %}Add Destinations and Videos{% endblock %}
+{% load static %}
+{% load embed_video_tags %}
+{% block body %}
+    <div class="container-fluid">
+
+        <div class="row">
+            <div id="poi-add-success" class="alert alert-success alert-dismissible fade in" style="display: none;">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Success!</strong> your destionation added succesfully!
+            </div>
+            <div id="poi-add-error" class="alert alert-danger alert-dismissible fade in" style="display: none;">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Error!</strong> Error while adding videos
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h4>Type a Holiday Destination</h4></div>
+                    <div class="panel-body">
+                        <div class="form-group row"></div>
+                        <div class="text-center col-sm-8 ">
+                            <input type="text" class="form-control" id="searchTextField"
+                                   placeholder="Please type your destination here"/>
+                        </div>
+                        <div class="col-sm-4">
+                            <button class="btn btn-primary" id="add-videos">Get Videos</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h4>Added Destinations</h4></div>
+                    <div class="panel-body" id="added-pois">
+                        <table class="table table-striped" id="poi_table">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h4>Please <strong>select</strong> videos that are relevant
+                        to your destination.</h4>
+
+                    </div>
+                    <div class="text-center">
+                        <div class="panel-body">
+                            <form role="form" class="btn-group-vertical" id="yt-video-list"
+                                  action="{% url 'recommender:save_poi' %}" method="post" enctype="multipart/form-data"
+                                  style="visible:false;">
+
+                            </form>
+                            <button class="btn btn-primary" id="save-poi" disabled>Add Selected Videos</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row text-center">
+        <p>Please specify number of final destination to be visited!</p>
+        <p>
+            <select id="final_visit">
+                {% for i in range %}
+                    <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <a href="{% url 'recommender:home' %}" class="btn btn-lg btn-success disabled" id="finished"
+           onclick="return false;"
+           data-toggle='tooltip' title='Please add at least 3 destinations and specify at least 2 final destinations.'>Save
+            Itinerary</a>
+    </div>
+
+
+    <!-- Delete POI Modal-->
+    <div class="modal fade" id="deletepoi" tabindex="-1" role="dialog" aria-labelledby="edit"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span
+                            class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                    <h4 class="modal-title custom_align" id="Heading">Delete Destination</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="alert alert-select"><span class="glyphicon glyphicon-exclamation-sign"></span>
+                        Are you sure you want to delete to this destination?
+                    </div>
+
+                </div>
+                <div class="modal-footer ">
+                    <button type="button" class="btn btn-success" id="delete-poi-submit"><span
+                            class="glyphicon glyphicon-ok-sign"></span> Yes
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><span
+                            class="glyphicon glyphicon-remove"></span> No
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=your_maps_key=3.exp&libraries=places"></script>
+    <script>
+        function showPleaseWait() {
+            var modalLoading = '<div class="modal" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false role="dialog">\
+                <div class="modal-dialog">\
+                    <div class="modal-content">\
+                        <div class="modal-header">\
+                            <h4 class="modal-title">Please wait while we add your videos to the destination place...</h4>\
+                        </div>\
+                        <div class="modal-body">\
+                            <div class="progress">\
+                              <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"\
+                              aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; height: 40px">\
+                              </div>\
+                            </div>\
+                        </div>\
+                    </div>\
+                </div>\
+            </div>';
+            $(document.body).append(modalLoading);
+            $("#pleaseWaitDialog").modal("show");
+        }
+
+        function hidePleaseWait() {
+            $("#pleaseWaitDialog").modal("hide");
+        }
+
+
+        function initialize() {
+            var input = document.getElementById('searchTextField');
+            new google.maps.places.Autocomplete(input);
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+        $(document).on("click", "#add-videos", function () {
+            contents = $("#searchTextField").val()
+            $("#searchTextField").prop('disabled', true)
+            $("#add-videos").prop('disabled', true)
+            $.ajax({
+                type: "POST",
+                url: "{% url 'recommender:get_videos' %}",
+                data: {'place': contents},
+                success: function (data) {
+                    $("#save-poi").prop('disabled', false)
+                    $('#yt-video-list').html(data);
+                }
+            });
+        });
+
+        $(document).on("click", "#save-poi", function () {
+            d = $("#yt-video-list").serialize() + "&bundleId={{ bundle.id }}"
+            $("#save-poi").html('Please wait...');
+            showPleaseWait()
+            $("#save-poi").prop('disabled', true);
+            $.ajax({
+                type: "POST",
+                url: {% url 'recommender:save_poi' %},
+                data: d,
+                success: function (success_data) {
+                    let poi = jQuery.parseJSON(success_data);
+                    place = $("#searchTextField").val();
+                    $("#searchTextField").val('')
+                    $("#save-poi").html("Add Selected Videos");
+                    $("#yt-video-list").html("");
+                    $("#searchTextField").prop('disabled', false);
+                    $("#add-videos").prop('disabled', false);
+                    hidePleaseWait();
+                    $("#poi_table").append("<tr id='poi-" + poi.id + "'><td width=80%>" + place + "</td><td># of Videos: " + poi.numOfVideos + " </td><td><p data-placement='top' data-toggle='tooltip' title='Delete'>" +
+                        "<button data-target='#deletepoi' data-title='Delete Destination' data-toggle='modal' class='btn btn-danger btn-xs open-deletepoi' data-poi-id='" + poi.id + "' data-bundle-id='" + poi.bundle + "'><span\n" +
+                        "class='glyphicon glyphicon-trash'></span> </button> </p></td></tr>");
+
+                    $("#poi-add-success").show()
+                    $("#poi-add-success").fadeTo(2000, 500).slideUp(500, function () {
+                        $("#poi-add-success").slideUp(500);
+                    });
+                },
+                error: function (request, error) {
+                    $("#save-poi").html("Add Selected Videos");
+                    $("#yt-video-list").html("");
+                    $("#searchTextField").prop('disabled', false);
+                    $("#add-videos").prop('disabled', false);
+                    hidePleaseWait();
+                    console.log(arguments);
+                    $("#poi-add-error").show();
+                    $("#poi-add-error").fadeTo(2000, 500).slideUp(500, function () {
+                        $("#poi-add-error").slideUp(500);
+                    });
+                }
+            });
+        });
+
+        $(document).on("click", ".open-deletepoi", function () {
+            var bundleId = $(this).data('bundle-id');
+            var poiId = $(this).data('poi-id');
+            $("#delete-poi-submit").data('poi-id', poiId);
+            $("#delete-poi-submit").data('bundle-id', bundleId);
+        });
+
+        $(document).on("click", "#delete-poi-submit", function () {
+            let bundleId = $(this).data('bundle-id');
+            let poiId = $(this).data('poi-id');
+            $.post("{% url 'recommender:delete_poi' %}", {bundle_id: bundleId, poi_id: poiId},
+                function (success_data) {
+                    let response_data = jQuery.parseJSON(success_data);
+                    if (response_data.success == 1) {
+                        $("#deletepoi").modal('hide');
+                        $("#poi-" + poiId).remove();
+                    } else
+                        alert("An error occurred while deleting destination!");
+                });
+
+        });
+
+        $("#final_visit").change(function () {
+            $.post("{% url 'recommender:update_bundle' %}", {
+                    bundle_id: {{ bundle.id }},
+                    number_of_final_dest: $(this).val()
+                },
+                function (success_data) {
+                    let response_data = jQuery.parseJSON(success_data);
+                    var rowCount = $('#poi_table tr').length;
+
+                    if (response_data.success == 1 && rowCount > 2) {
+                        $("#finished").removeClass("disabled");
+                        $("#finished").prop("onclick", null);
+                    } else if (response_data.success == 1 && rowCount < 3) {
+                        $("#finished").addClass("disabled");
+                        alert("Please add at least 3 destinations!");
+                        $("#finished").attr('onclick', 'return false;');
+                    } else if (response_data.success == 0) {
+                        $("#finished").addClass("disabled");
+                        alert("Please select at least 2 final destinations!");
+                        $("#finished").attr('onclick', 'return false;');
+                    } else {
+                        $("#finished").addClass("disabled");
+                        alert("An error occurred while updating number of final destination!");
+                        $("#finished").attr('onclick', 'return false;');
+                    }
+                });
+        });
+
+    </script>
+{% endblock %}

@@ -1,0 +1,119 @@
+#videolist {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.title {
+    font-family: "Neue Montreal", cursive;
+    font-size: 0.9em;
+    font-weight: bold;
+    position: relative;
+    top: 0.9em;
+}
+
+.subinfo {
+    font-family: "Neue Montreal", cursive;
+    font-size: 0.8em;
+    color: dimgrey;
+    display: inline;
+    position: relative;
+    top: 0.7em;
+    word-wrap: break-word
+}
+
+.image {
+    width: 320px;
+    height: 200px;
+    opacity: 1;
+    transition: .5s ease;
+    padding-right: 5px;
+    position: relative;
+    top: 20px;
+}
+
+.middle {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    left: calc(170px);
+    top: calc(110px);
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.col-sm-4:hover .image {
+    opacity: 0.3;
+}
+
+.col-sm-4:hover .middle {
+    opacity: 1;
+}
+
+ul.errorlist {
+    padding-left: 0;
+}
+
+ul.errorlist > li {
+    list-style: none;
+}
+
+.navbar {
+    border-radius: 0;
+}
+
+.navbar-brand {
+    font-family: 'Satisfy', cursive;
+}
+
+.glyphicon-star {
+    color: #CCCCCC;
+    font-size: 16px;
+}
+
+.glyphicon-star.active {
+    color: #FDB230;
+}
+
+#yt-list {
+    list-style: none;
+}
+
+.yt-checkbox {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 1px solid darkgrey;
+    margin: 10px;
+    border-radius: 10px;
+
+}
+
+.yt-checkbox iframe {
+    position: relative;
+    left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+
+#watchVideoModalBody {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    padding-top: 25px;
+    height: 0;
+}
+
+
+.caption-footer {
+    text-align: right;
+    border-top: 1px solid #e5e5e5;
+    position: absolute;
+    bottom: 0px;
+    padding: 5px;
+}
+
+.mylbl{ cursor: pointer;}
